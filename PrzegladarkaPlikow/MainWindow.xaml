@@ -1,0 +1,211 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PrzegladarkaPlikow.MainWindow"
+        Title="Explorer" Height="385" Width="793" DataContext="{Binding RelativeSource={RelativeSource Self}}" SnapsToDevicePixels="True">
+	<Window.Resources>
+        
+		<DataTemplate x:Key="FileExplorerIconTemplate">
+            
+            <Grid Name="ItemTemplateGrid" Width="230" Height="60" Margin="-2,0,0,0" Background="{x:Null}">
+              
+                <Grid.ColumnDefinitions>
+         <ColumnDefinition Width="57"/>
+         <ColumnDefinition Width="173"/>
+      </Grid.ColumnDefinitions>
+            	<Rectangle Grid.ColumnSpan="2" Fill="{x:Null}" Margin="0" Stroke="{x:Null}" HorizontalAlignment="Left" Width="230"/>
+            	<Border Margin="5,0,0,6" BorderBrush="{x:Null}" BorderThickness="1" Opacity="1" RenderTransformOrigin="0.5,0.5" CornerRadius="3" Width="48" Height="48" HorizontalAlignment="Left" VerticalAlignment="Bottom" d:LayoutOverrides="Height">
+            		<Border.Effect>
+            			<DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0"/>
+            		</Border.Effect>
+                    <Image Source="{Binding fileType.largeIcon}" Stretch="UniformToFill" Width="Auto" Height="Auto" Margin="0,0,-1,-1" RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True" />
+            	</Border>
+            	<StackPanel Grid.Column="1" Margin="0,7.5,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168">
+            		<StackPanel Orientation="Horizontal" TextBlock.FontWeight="Bold" Margin="0,3,0,2" HorizontalAlignment="Left" Width="168">
+            			<TextBlock Text="{Binding fileName}" TextTrimming="None" FontWeight="Normal" FontSize="12" TextOptions.TextFormattingMode="Display" TextWrapping="NoWrap" Margin="0,0,0,0" />
+            		</StackPanel>
+            		<TextBlock Text="{Binding fileDescription}" Foreground="#FF6D6D6D" FontSize="12" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" Width="168" Margin="0" SnapsToDevicePixels="True" />
+            	</StackPanel>
+  </Grid>
+		</DataTemplate>
+
+        <DataTemplate x:Key="FileExplorerIconTemplateSelected">
+
+            <Grid Name="ItemTemplateGrid" Width="230" Height="60
+			" Margin="-2,0,0,0" SnapsToDevicePixels="True" Background="White">
+                <Grid.ContextMenu>
+
+                    <ContextMenu>
+
+                        <MenuItem Command="Cut">
+                            <MenuItem.Icon>
+                                <Image Source="GUI icons/scissors-blue.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="Copy">
+                            <MenuItem.Icon>
+                                <Image Source="GUI icons/document-copy.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="Delete">
+                            <MenuItem.Icon>
+                                <Image Source="GUI icons/cross-script.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="Archiwizuj...">
+                            <MenuItem.Icon>
+                                <Image Source="GUI icons/box-zipper.png" />
+                            </MenuItem.Icon>
+
+                        </MenuItem>
+
+                    </ContextMenu>
+
+
+                </Grid.ContextMenu>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="56.75"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Height="56" Grid.ColumnSpan="2" Margin="2,0.5,0,0" RadiusY="3.25" RadiusX="3.25" Stroke="#FF84ACDD">
+                	<Rectangle.Fill>
+                		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                			<GradientStop Color="#FFEBF4FE" Offset="0"/>
+                			<GradientStop Color="#FFCFE4FE" Offset="1"/>
+                		</LinearGradientBrush>
+                	</Rectangle.Fill>
+                </Rectangle>
+                <Rectangle Height="Auto" Grid.ColumnSpan="2" Margin="3,3.336,0.998,3.464" RadiusY="2.165" RadiusX="2.165" Stroke="White" Fill="{x:Null}" Opacity="0.71" SnapsToDevicePixels="True"/>
+            	<Border Margin="5,0,0,6" BorderBrush="{x:Null}" BorderThickness="1" Opacity="1" RenderTransformOrigin="0.5,0.5" CornerRadius="3" Width="48" Height="48" HorizontalAlignment="Left" VerticalAlignment="Bottom" d:LayoutOverrides="Height">
+            		<Border.Effect>
+            			<DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0"/>
+            		</Border.Effect>
+                    <Image Source="{Binding fileType.largeIcon}" Stretch="UniformToFill" Width="Auto" Height="Auto" Margin="0,0,-1,-1" RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" SnapsToDevicePixels="True" />
+                </Border>
+            	<StackPanel Grid.Column="1" Margin="0,7.5,0,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Width="173.25">
+            		<StackPanel Orientation="Horizontal" TextBlock.FontWeight="Bold" Margin="0,3,0,2" HorizontalAlignment="Left" Width="168">
+            			<TextBlock Text="{Binding fileName}" TextTrimming="None" FontWeight="Normal" FontSize="12" TextOptions.TextFormattingMode="Display" TextWrapping="NoWrap" Margin="0,0,0,0" Foreground="Black" />
+            		</StackPanel>
+            		<TextBlock Text="{Binding fileDescription}" Foreground="#FF6D6D6D" FontSize="12" TextOptions.TextFormattingMode="Display" HorizontalAlignment="Left" Width="168" Margin="0" SnapsToDevicePixels="True" />
+            	</StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ListBoxItem}" x:Key="ContainerStyle">
+            <EventSetter Event="MouseDoubleClick" Handler="ListItem_MouseDown"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource FileExplorerIconTemplate}" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource FileExplorerIconTemplateSelected}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48*" />
+            <RowDefinition Height="298*" />
+        </Grid.RowDefinitions>
+        <Grid Height="Auto" Margin="-1,0,0,0" x:Name="grid1" Grid.RowSpan="2">
+            <Grid  Name="gridFiles"  MouseDown="ListBox_MouseDown" MouseUp="ListBox_MouseUp" MouseMove="ListBox_MouseMove"  HorizontalAlignment="Stretch" Margin="0,48,0,0" VerticalAlignment="Stretch" Width="Auto">
+
+                <ListBox ItemsSource="{Binding}" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AllowDrop="True" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemContainerStyle="{StaticResource ContainerStyle}" Name="directoryFiles" SnapsToDevicePixels="True" Cursor="Arrow" DragOver="directoryFiles_DragOver" Drop="directoryFiles_Drop">
+
+                    <ListBox.ItemsPanel>
+        
+                        <ItemsPanelTemplate>
+                            
+                            <WrapPanel Height="Auto" HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                  
+                </ListBox>
+                <Canvas>
+                    
+                </Canvas>
+                <Canvas Name="CanvasWithRect">
+                    <Canvas.ContextMenu>
+
+                        <ContextMenu>
+
+                            <MenuItem Command="Refresh">
+                                <MenuItem.Icon>
+                                    <Image Source="GUI icons/arrow-circle-double-135.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Archiwizuj">
+                                <MenuItem.Icon>
+                                    <Image Source="GUI icons/folder-zipper.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <Separator />
+                            <MenuItem Command="Paste">
+                                <MenuItem.Icon>
+                                    <Image Source="GUI icons/clipboard-paste.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+
+
+                    </Canvas.ContextMenu>
+                    <Rectangle Name="rct_Selection" Stroke="#FF71A6FC" Fill="#FFBDD0E9" Opacity="0.5" Visibility="Collapsed" />
+                    <!-- This canvas contains elements that are to be selected -->
+                </Canvas>
+
+                  </Grid>
+        </Grid>
+        <WrapPanel Height="48" Name="wrapPanel1" VerticalAlignment="Top" Margin="1,0,0,0">
+            <Button x:Name="buttonFileUp" Click="buttonFileUp_Click" Width="97" Margin="5" Height="37">
+                <WrapPanel>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" Source="GUI icons/arrow-090.png" Stretch="None" StretchDirection="UpOnly" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5" Width="16" Height="16" />
+                    <TextBlock Width="50" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,10
+,5" TextAlignment="Left" FontSize="12">do góry</TextBlock>
+                </WrapPanel>
+            </Button>
+            <Button Height="37" Name="buttonNewFolder" Width="111" Margin="5
+                    ">
+                <WrapPanel>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Margin="5" Source="GUI icons/folder--plus.png" Stretch="Uniform" StretchDirection="UpOnly" VerticalAlignment="Top" Width="16" Height="16" SnapsToDevicePixels="False" />
+                    <TextBlock FontSize="12" HorizontalAlignment="Left" Margin="0,5,10 ,5" TextAlignment="Left" VerticalAlignment="Top" Width="64">nowy folder
+                    </TextBlock>
+                </WrapPanel>
+            </Button>
+            <Button Height="37" Name="buttonRefresh" Width="99" Margin="5">
+                <WrapPanel>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Margin="5" Source="GUI icons/arrow-circle-double-135.png" Stretch="None" StretchDirection="Both" VerticalAlignment="Top" Width="16" Height="16" />
+                    <TextBlock FontSize="11" HorizontalAlignment="Left" Margin="0,5,10 ,5" TextAlignment="Left" VerticalAlignment="Top" Width="49">odswież</TextBlock>
+                </WrapPanel>
+            </Button>
+            <Button Height="37" Name="buttonAddFiles" Width="107" Margin="5
+                    ">
+                <WrapPanel>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Margin="5" Source="GUI icons/document--plus.png" Stretch="None" StretchDirection="UpOnly" VerticalAlignment="Top" Width="Auto" Height="Auto" />
+                    <TextBlock FontSize="11" HorizontalAlignment="Left" Margin="0,5,10 ,5" TextAlignment="Left" VerticalAlignment="Top" Width="60">dodaj pliki...
+                    </TextBlock>
+                </WrapPanel>
+            </Button>
+            <Button Height="37" Name="buttonDelete" Width="135" Margin="5">
+                <WrapPanel>
+                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Margin="5" Source="GUI icons/cross-script.png" Stretch="None" StretchDirection="UpOnly" VerticalAlignment="Top" Width="16" Height="16" />
+                    <TextBlock FontSize="11" HorizontalAlignment="Left" Margin="0,5,10 ,5" TextAlignment="Left" VerticalAlignment="Top" Width="85">usuń zaznaczone
+                    </TextBlock>
+                </WrapPanel>
+            </Button>
+            <Button Height="37" Name="button1" Width="115">
+                <WrapPanel Width="99">
+                    <Image HorizontalAlignment="Left" Margin="5" Source="GUI icons/folder-zipper.png" Stretch="None" StretchDirection="Both" VerticalAlignment="Top" Width="16" Height="16" />
+                    <TextBlock FontSize="11" HorizontalAlignment="Left" Margin="0,5,10 ,5" TextAlignment="Left" VerticalAlignment="Top" Width="58">archiwizuj
+                    </TextBlock>
+                </WrapPanel>
+            </Button>
+        </WrapPanel>
+    </Grid>
+</Window>
